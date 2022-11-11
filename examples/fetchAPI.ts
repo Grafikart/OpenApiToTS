@@ -4,28 +4,28 @@ const baseURL = 'http://jsonplaceholder.typicode.com/'
 
 type DefaultToGet<T extends string | undefined> = T extends string ? T : 'get'
 
-export async function jsonFetch<
+export async function fetchAPI<
   Path extends APIPaths,
   Options extends APIRequests<Path>
-> (path: Path, options: Options): Promise<APIResponse<Path, DefaultToGet<Options['method']>>> {
+  > (path: Path, options?: Options): Promise<APIResponse<Path, DefaultToGet<Options['method']>>> {
   const fetchOptions: RequestInit = {
+    credentials: 'include',
     headers: {
       'Accept': 'application/json'
     }
   }
+  options = (options ?? {}) as Options
 
   // Request body
   const body = 'body' in options ? options['body'] : null
-  if (
-    body &&
-    typeof body !== 'string' &&
-    !(body as any instanceof FormData)
-  ) {
-    fetchOptions.body = JSON.stringify(body)
-  } else if ('body' in options) {
+  if (body && (
+    typeof body === 'string' ||
+    body instanceof FormData
+  )) {
     fetchOptions.body = body
+  } else if (body) {
+    fetchOptions.body = JSON.stringify(body)
   }
-
 
   // Replace url parameters (for instance "/path/{id}"
   let urlPath: string = path
@@ -38,8 +38,8 @@ export async function jsonFetch<
   const url = new URL(urlPath, baseURL);
 
   // Add query parameters
-  if ('query' in options) {
-    for (const [name, value] of Object.entries(options['query'])) {
+  if ('query' in options && options.query) {
+    for (const [name, value] of Object.entries(options.query)) {
       url.searchParams.set(name, typeof value === 'object' ? JSON.stringify(value) : (value as any).toString())
     }
   }

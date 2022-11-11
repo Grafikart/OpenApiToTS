@@ -1,11 +1,15 @@
 {
   "name": "@grafikart/o2ts",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "type": "module",
   "main": "dist/generator.js",
   "bin": {
     "o2ts": "dist/generator.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Grafikart/OpenApiToTS"
   },
   "files": [
     "dist"

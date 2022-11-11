@@ -1,6 +1,6 @@
 import type { APIPaths, APIRequests, APIResponse } from '../openapi'
 
-const baseURL = 'http://jsonplaceholder.typicode.com/'
+const baseURL = 'http://jsonplaceholder.typicode.com'
 
 type DefaultToGet<T extends string | undefined> = T extends string ? T : 'get'
 
@@ -24,6 +24,7 @@ export async function fetchAPI<
   )) {
     fetchOptions.body = body
   } else if (body) {
+    (fetchOptions.headers as Record<string, string>)['Content-Type'] = 'application/json'
     fetchOptions.body = JSON.stringify(body)
   }
 
@@ -35,7 +36,7 @@ export async function fetchAPI<
     }
   }
 
-  const url = new URL(urlPath, baseURL);
+  const url = new URL(baseURL + urlPath);
 
   // Add query parameters
   if ('query' in options && options.query) {

@@ -1,0 +1,5 @@
+openapi.ts
+openapi.yml
+node_modules
+dist
+tsconfig.tsbuildinfo

@@ -61,7 +61,8 @@ export class SchemaParser {
     types.push(['APIEndpoints', apiEndpoints])
     types.push(['APIPaths', new SimpleType('keyof APIEndpoints')])
     types.push(['APIRequests<T extends APIPaths>', new SimpleType("APIEndpoints[T]['requests']")])
-    types.push(['APIResponse<T extends APIPaths, M extends string>', new SimpleType('M extends keyof APIEndpoints[T][\'responses\'] ? APIEndpoints[T][\'responses\'][M] : never')])
+    types.push(['APIResponse<T extends APIPaths, M extends string | undefined>', new SimpleType('DefaultToGet<M> extends keyof APIEndpoints[T][\'responses\'] ? APIEndpoints[T][\'responses\'][DefaultToGet<M>] : never')])
+    types.push(['DefaultToGet<T extends string | undefined>', new SimpleType(`T extends string ? T : 'get'`)])
 
     return types.map(([name, type]) => `export type ${name} = ${type.toString()}`).join('\n\n')
   }

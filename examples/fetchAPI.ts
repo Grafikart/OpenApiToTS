@@ -2,13 +2,12 @@ import type { APIPaths, APIRequests, APIResponse } from '../openapi'
 
 const baseURL = 'http://jsonplaceholder.typicode.com'
 
-type DefaultToGet<T extends string | undefined> = T extends string ? T : 'get'
-
 export async function fetchAPI<
   Path extends APIPaths,
   Options extends APIRequests<Path>
-  > (path: Path, options?: Options): Promise<APIResponse<Path, DefaultToGet<Options['method']>>> {
+  > (path: Path, options?: Options): Promise<APIResponse<Path, Options['method']>> {
   const fetchOptions: RequestInit = {
+    method: options?.method ?? 'get',
     credentials: 'include',
     headers: {
       'Accept': 'application/json'

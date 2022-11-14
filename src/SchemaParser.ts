@@ -7,7 +7,6 @@ import { ArrayType } from './nodes/ArrayType.js'
 import { UnionType } from './nodes/UnionType.js'
 import { IntersectionType } from './nodes/IntersectionType.js'
 import { StringLiteralType } from './nodes/StringLiteralType.js'
-import { GenericType } from './nodes/GenericType.js'
 
 function capitalize (s: string): string {
   return s[0].toUpperCase() + s.slice(1)
@@ -28,8 +27,6 @@ export class SchemaParser {
 
   convertToCode (): string {
     const types = [] as [string, NodeType][]
-
-    types.push(['JSONString<T>', new SimpleType('string')])
 
     // Components (shared types)
     for (const [group, schemas] of Object.entries(this.document.components ?? {})) {
@@ -177,10 +174,7 @@ export class SchemaParser {
       }
 
       if ('application/json' in item) {
-        return new GenericType(
-          'JSONString',
-          this.itemToNode(item['application/json']['schema']).with(infos)
-        )
+        return this.itemToNode(item['application/json']['schema']).with(infos)
       }
 
       if ('in' in item && 'schema' in item) {

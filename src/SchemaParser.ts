@@ -60,13 +60,32 @@ export class SchemaParser {
       apiEndpoints.addProperty(endpoint, apiEndpoint)
     }
     types.push(['APIEndpoints', apiEndpoints])
-    types.push(['APIPaths', new SimpleType('keyof APIEndpoints')])
-    types.push(['APIRequests<T extends APIPaths>', new SimpleType("APIEndpoints[T]['requests']")])
-    types.push(['APIRequest<T extends APIPaths, M extends keyof APIEndpoints[T]["responses"]>', new SimpleType("APIRequests<T> & { method: M }")])
-    types.push(['APIResponse<T extends APIPaths, M extends string | undefined>', new SimpleType('DefaultToGet<M> extends keyof APIEndpoints[T][\'responses\'] ? APIEndpoints[T][\'responses\'][DefaultToGet<M>] : never')])
-    types.push(['DefaultToGet<T extends string | undefined>', new SimpleType(`T extends string ? T : 'get'`)])
 
-    return types.map(([name, type]) => `export type ${name} = ${type.toString()}`).join('\n\n')
+    return types.map(([name, type]) => `export type ${name} = ${type.toString()}`).join('\n\n') + `
+  
+export type APIPaths = keyof APIEndpoints
+
+export type APIRequests<T extends APIPaths> = APIEndpoints[T]["requests"]
+
+export type APIMethods<T extends APIPaths> = NonNullable<APIRequests<T>["method"]>
+
+export type APIRequest<
+  T extends APIPaths,
+  M extends APIMethods<T>
+> = Omit<{
+  [MM in APIMethods<T>]: APIRequests<T> & { method: MM }
+}[M], "method"> & {method?: M}
+
+type DefaultToGet<T extends string | undefined> = T extends string
+  ? T
+  : "get"
+
+export type APIResponse<
+  T extends APIPaths,
+  M extends string | undefined
+> = DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
+  ? APIEndpoints[T]["responses"][DefaultToGet<M>]
+  : never`
   }
 
   private requestToType (pathSchema: Operation, method: string): NodeType {

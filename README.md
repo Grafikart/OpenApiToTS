@@ -38,7 +38,7 @@ import type { APIPaths, APIRequests, APIResponse } from './openapi'
 export async function fetchAPI<
   Path extends APIPaths,
   Options extends APIRequests<Path>
-> (path: Path, options: Options): Promise<APIResponse<Path, DefaultToGet<Options['method']>>> {
+> (path: Path, options: Options): Promise<APIResponse<Path, Options['method']>> {
   // Your code here
 }
 ```

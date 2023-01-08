@@ -30,6 +30,10 @@ export class SchemaParser {
 
     // Components (shared types)
     for (const [group, schemas] of Object.entries(this.document.components ?? {})) {
+      // We don't handle auth yet
+      if (group === 'securitySchemes') {
+        continue
+      }
       const typeName = 'API' + capitalize(group)
       const components = new ObjectType()
       for (const [schemaName, componentSchema] of Object.entries(schemas)) {
@@ -58,6 +62,7 @@ export class SchemaParser {
     types.push(['APIEndpoints', apiEndpoints])
     types.push(['APIPaths', new SimpleType('keyof APIEndpoints')])
     types.push(['APIRequests<T extends APIPaths>', new SimpleType("APIEndpoints[T]['requests']")])
+    types.push(['APIRequest<T extends APIPaths, M extends keyof APIEndpoints[T]["responses"]>', new SimpleType("APIRequests<T> & { method: M }")])
     types.push(['APIResponse<T extends APIPaths, M extends string | undefined>', new SimpleType('DefaultToGet<M> extends keyof APIEndpoints[T][\'responses\'] ? APIEndpoints[T][\'responses\'][DefaultToGet<M>] : never')])
     types.push(['DefaultToGet<T extends string | undefined>', new SimpleType(`T extends string ? T : 'get'`)])
 
@@ -155,7 +160,6 @@ export class SchemaParser {
       }
 
       if ('type' in item && Array.isArray(item.type)) {
-        console.error(item)
         throw new Error(`Can't convert item to NodeType`)
       }
 

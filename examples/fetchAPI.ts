@@ -1,6 +1,6 @@
-import type { APIPaths, APIRequests, APIResponse } from '../openapi'
+import type { APIPaths, APIRequests, APIResponse } from '../tests/petstore'
 
-const baseURL = 'http://jsonplaceholder.typicode.com'
+const baseURL = 'https://petstore3.swagger.io/api/v3'
 
 export async function fetchAPI<
   Path extends APIPaths,

@@ -1,6 +1,6 @@
 {
   "name": "@grafikart/o2ts",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "type": "module",
   "main": "dist/generator.js",
@@ -16,7 +16,16 @@
   ],
   "scripts": {
     "build": "tsc --noEmit false",
-    "dev": "ts-node-dev --respawn src/generator.ts"
+    "dev": "tsc-watch --onSuccess \"node ./dist/generator.js ./tests/petstore.yml ./tests/petstore.ts\"",
+    "test": "ava ./tests/generator.test.ts"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=ts-node/esm"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -28,8 +37,10 @@
   "devDependencies": {
     "@types/node": "^18.11.9",
     "@types/prettier": "^2.7.1",
+    "ava": "^5.1.0",
     "openapi-types": "^12.0.2",
-    "ts-node-dev": "^2.0.0",
+    "ts-node": "^10.9.1",
+    "tsc-watch": "^6.0.0",
     "typescript": "^4.6.4"
   },
   "volta": {

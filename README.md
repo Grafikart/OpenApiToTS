@@ -1,6 +1,6 @@
 # @grafikart/o2ts
 
-A simple tool to convert OpenAPI 3.1 specs into a TypeScript file with useful types.
+A simple tool to convert OpenAPI 3.0/3.1 specs into a TypeScript file with useful types.
 
 ## Install
 

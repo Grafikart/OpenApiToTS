@@ -1,4 +1,4 @@
-import { APIPaths, APIRequests, APIRequest, APIResponse, APIMethods } from './petstore'
+import { APIPaths, APIRequests, APIRequest, APIResponse, APIMethods } from './openapiv31'
 
 /**
  * This file is used to test if the type would work in a real use case

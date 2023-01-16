@@ -9,13 +9,18 @@ import { SchemaParser } from '../src/SchemaParser.js'
 import { format } from 'prettier'
 
 const testDir = dirname(fileURLToPath(import.meta.url))
-const fixture = join(testDir, 'petstore.yml');
-const snapshot = join(testDir, 'petstore.ts');
 
 
-test('should compile correctly', async t => {
-  const apiSchema = await OpenAPI.parse(fixture) as OpenAPIV3_1.Document;
+const shouldMatchFiles = async (file: string, t: any) => {
+  const apiSchema = await OpenAPI.parse(join(testDir, `${file}.yml`)) as OpenAPIV3_1.Document;
   const options = new SchemaParser(apiSchema)
   const code = options.convertToCode()
-  t.is(format(code, { semi: false, parser: "typescript" }), readFileSync(snapshot, 'utf-8'))
+  t.is(format(code, { semi: false, parser: "typescript" }), readFileSync(join(testDir, `${file}.ts`), 'utf-8'))
+}
+
+test('it should work with OpenAPIV3.1', t => {
+  return shouldMatchFiles('openapiv31', t)
+})
+ test('it should work with OpenAPIV3.0', (t) => {
+    return shouldMatchFiles('openapiv30', t)
 });

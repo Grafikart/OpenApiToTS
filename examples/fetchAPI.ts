@@ -1,4 +1,4 @@
-import type { APIPaths, APIRequests, APIResponse } from '../tests/petstore'
+import type { APIPaths, APIRequests, APIResponse } from '../tests/openapiv31'
 
 const baseURL = 'https://petstore3.swagger.io/api/v3'
 

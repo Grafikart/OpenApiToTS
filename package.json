@@ -1,6 +1,6 @@
 {
   "name": "@grafikart/o2ts",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "",
   "type": "module",
   "main": "dist/generator.js",
@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "tsc --noEmit false",
-    "dev": "tsc-watch --onSuccess \"node ./dist/generator.js ./tests/petstore.yml ./tests/petstore.ts\"",
+    "dev": "tsc-watch --onSuccess \"node ./dist/generator.js ./tests/openapiv31.yml ./tests/openapiv31.ts\"",
     "test": "ava ./tests/generator.test.ts"
   },
   "ava": {

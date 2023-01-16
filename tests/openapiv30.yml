@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: Document upload API
+  description: Document upload API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+
+  /document:
+    post:
+      description: Upload a new document
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                objectType:
+                  type: string
+                  description: The type of risk object of the document is attached to
+                  example: ContractRequest
+                  enum:
+                    - PolicyOwner
+                    - Car
+                    - Motorbike
+                    - ContractRequest
+                    - Contract
+                objectId:
+                  type: number
+                  description: The id of the risk object of the document is attached to
+                  example: 25421
+                documentType:
+                  type: string
+                  enum:
+                    - DriverLicense
+                    - IdentityCard
+                    - AccidentRecord
+                    - PlateRegistrationCertificate
+                    - OdometerPicture
+                    - PurchaseInvoice
+                    - CurrentContract
+                  description: The type of the document (DriverLicense, IdentityCard, AccidentRecord, PlateRegistrationCertificate, OdometerPicture, PurchaseInvoice, CurrentContract)
+                  example: DriverLicense
+        required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documentId:
+                    type: string
+                    description: The uuid of the document
+                    example: 123e4567-e89b-12d3-a456-426655440000
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    example: 400
+                  errorMessage:
+                    type: string
+                    description: The error message
+                    example: Invalid request
+                  invalidFields:
+                    type: array
+                    nullable: false
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          description: The name of the invalid field
+                          example: file
+                        message:
+                          type: string
+                          description: The error message
+                          example: File is required
+
+  /documents:
+    get:
+      description: Retrieve all documents
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    example: 404
+                  errorMessage:
+                    type: string
+                    description: The error message
+                    example: Unable to find documents
+
+  /document/{documentUuid}:
+    get:
+      description: Retrieve a document by it's uuid
+      parameters:
+        - name: documentUuid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426655440000
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Document'
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  httpCode:
+                    type: integer
+                    example: 404
+                  errorMessage:
+                    type: string
+                    description: The error message
+                    example: Unable to find document with given uuid
+
+
+  /required_documents:
+    get:
+      description: Get all the required documents that have to be uploaded for a contract request
+      parameters:
+        - name: contractRequestId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426655440000
+      responses:
+        '200':
+          description: OK
+
+
+components:
+  schemas:
+    Document:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: The uuid of the document
+          example: 123e4567-e89b-12d3-a456-426655440000
+        objectType:
+          type: string
+          description: The type of risk object of the document is attached to
+          example: ContractRequest
+          enum:
+            - PolicyOwner
+            - Car
+            - Motorbike
+            - ContractRequest
+            - Contract
+        objectId:
+          type: number
+          description: The id of the risk object of the document is attached to
+          example: 25421
+        documentType:
+          type: string
+          enum:
+            - DriverLicense
+            - IdentityCard
+            - AccidentRecord
+            - PlateRegistrationCertificate
+            - OdometerPicture
+            - PurchaseInvoice
+            - CurrentContract
+          description: The type of the document (DriverLicense, IdentityCard, AccidentRecord, PlateRegistrationCertificate, OdometerPicture, PurchaseInvoice, CurrentContract)
+          example: DriverLicense
+        fileName:
+          type: string
+          description: The name of the file
+          example: driver-license.jpg
+        mimeType:
+          type: string
+          description: The mime type of the file
+          example: image/jpeg
+        createdAt:
+          type: string
+          description: The date the document was created
+          example: 2020-01-01T00:00:00.000Z
+        updatedAt:
+          type: string
+          description: The date the document was last updated
+          example: 2020-01-01T00:00:00.000Z

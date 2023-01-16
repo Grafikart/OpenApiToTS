@@ -118,7 +118,7 @@ export type APIResponse<
       response = this.resolveRefs(response) as Responses[string]
     }
     if (!('content' in response)) {
-      throw new Error(`Can't parse response content ${JSON.stringify(response, null, 2)}`)
+      return new SimpleType('null')
     }
     const jsonBody = response.content?.['application/json']?.['schema']
     if (!jsonBody) {
@@ -215,6 +215,10 @@ export type APIResponse<
 
       if ('allOf' in item && item.allOf) {
         return new IntersectionType(item.allOf.map(v => this.itemToNode(v))).with(infos)
+      }
+
+      if ('oneOf' in item && item.oneOf) {
+        return new UnionType(item.oneOf.map(v => this.itemToNode(v))).with(infos)
       }
 
       if (!('type' in item) || typeof item.type !== 'string') {

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import OpenAPI from '@readme/openapi-parser'
 import type { OpenAPIV3_1 } from 'openapi-types'
 import { format } from 'prettier'

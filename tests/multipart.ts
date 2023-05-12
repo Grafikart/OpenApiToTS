@@ -13,7 +13,7 @@ export type APISchemas = {
 export type APIEndpoints = {
   "/upload": {
     responses: { post: APISchemas["File"] }
-    requests: { method: "post"; body: APISchemas["File"] | FormData }
+    requests: { method: "post"; body: FormData }
   }
 }
 

@@ -9,9 +9,6 @@ paths:
       requestBody:
         description: Create a new File
         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/File'
           multipart/form-data:
             schema:
               type: object

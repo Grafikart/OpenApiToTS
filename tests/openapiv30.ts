@@ -66,7 +66,7 @@ export type APIEndpoints = {
         documentId?: string
       }
     }
-    requests: { method: "post" }
+    requests: { method: "post"; body: FormData }
   }
   "/documents": {
     responses: { get: Array<APISchemas["Document"]> }

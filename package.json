@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "tsc --noEmit false",
-    "dev": "tsc-watch --onSuccess \"node ./dist/generator.js ./tests/multipart.yml ./tests/multipart.ts\"",
+    "dev": "tsc-watch --onSuccess \"node ./dist/generator.js ./tests/openapiv30.yml ./tests/openapiv30.ts\"",
     "test": "ava ./tests/generator.test.ts"
   },
   "ava": {

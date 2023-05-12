@@ -6,11 +6,9 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
-
   /document:
     post:
       description: Upload a new document
-
       requestBody:
         content:
           multipart/form-data:
@@ -47,7 +45,6 @@ paths:
                   description: The type of the document (DriverLicense, IdentityCard, AccidentRecord, PlateRegistrationCertificate, OdometerPicture, PurchaseInvoice, CurrentContract)
                   example: DriverLicense
         required: true
-
       responses:
         '200':
           description: OK

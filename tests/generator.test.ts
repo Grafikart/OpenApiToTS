@@ -10,7 +10,6 @@ import { format } from 'prettier'
 
 const testDir = dirname(fileURLToPath(import.meta.url))
 
-
 const shouldMatchFiles = async (file: string, t: any) => {
   const apiSchema = await OpenAPI.parse(join(testDir, `${file}.yml`)) as OpenAPIV3_1.Document;
   const options = new SchemaParser(apiSchema)
@@ -23,4 +22,7 @@ test('it should work with OpenAPIV3.1', t => {
 })
  test('it should work with OpenAPIV3.0', (t) => {
     return shouldMatchFiles('openapiv30', t)
+});
+test('it should work with multipart/form-data request body', (t) => {
+  return shouldMatchFiles('multipart', t)
 });

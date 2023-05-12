@@ -1,0 +1,47 @@
+openapi: 3.0.3
+info:
+  title: File Upload API
+paths:
+  /upload:
+    post:
+      summary: Upload a file
+      description: Upload a file
+      requestBody:
+        description: Create a new File
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '405':
+          description: Invalid input
+components:
+  schemas:
+    File:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: demo.mp4

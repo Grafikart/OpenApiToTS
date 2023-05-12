@@ -101,8 +101,19 @@ export type APIResponse<
     if ('requestBody' in pathSchema && pathSchema.requestBody) {
       const requestBody = this.resolveRefs(pathSchema.requestBody)
       const jsonBody = requestBody.content['application/json']
+      const multipartBody = requestBody.content['multipart/form-data']
+      const bodyTypes: NodeType[] = [];
+
       if (jsonBody && 'schema' in jsonBody && jsonBody.schema) {
-        type.addProperty('body', this.itemToNode(jsonBody.schema))
+        bodyTypes.push(this.itemToNode(jsonBody.schema))
+      }
+
+      if (multipartBody && 'schema' in multipartBody && multipartBody.schema) {
+        bodyTypes.push(new SimpleType("FormData"))
+      }
+
+      if(bodyTypes.length > 0) {
+        type.addProperty('body', new UnionType(bodyTypes))
       }
     }
 

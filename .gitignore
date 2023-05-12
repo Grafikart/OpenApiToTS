@@ -2,4 +2,5 @@ openapi.ts
 openapi.yml
 node_modules
 dist
+demo
 tsconfig.tsbuildinfo

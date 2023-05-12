@@ -232,8 +232,13 @@ export type APIResponse<
         return new UnionType(item.oneOf.map(v => this.itemToNode(v))).with(infos)
       }
 
+      // Handle malformed openapi document with missing type
+      if (!('type' in item) && 'properties' in item) {
+        (item as any).type = 'object'
+      }
+
       if (!('type' in item) || typeof item.type !== 'string') {
-        throw new Error(`Can't convert item to NodeType : ${JSON.stringify(item)}`)
+          throw new Error(`Can't convert item to NodeType : ${JSON.stringify(item)}`)
       }
 
       if (['object'].includes(item.type)) {
@@ -274,7 +279,7 @@ export type APIResponse<
       console.error(item)
       throw new Error(`Can't convert item to NodeType`)
     } catch (e) {
-      console.error('VVVV From VVVV')
+      console.error('VVVV From VVVV', )
       console.error(item)
       throw e
     }

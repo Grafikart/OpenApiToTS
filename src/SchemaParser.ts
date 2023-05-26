@@ -121,7 +121,9 @@ export type APIResponse<
   }
 
   private responseToType (responses: Responses): NodeType {
-    let response = responses?.['200']
+    let response = responses 
+      ? Object.entries(responses).filter(e => e[0][0] === '2').map(e => e[1])[0]
+      : undefined;
     if (!response) {
       return new SimpleType('null')
     }

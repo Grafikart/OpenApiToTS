@@ -26,3 +26,6 @@ test('it should work with OpenAPIV3.1', t => {
 test('it should work with multipart/form-data request body', (t) => {
   return shouldMatchFiles('multipart', t)
 });
+test('it should work with unknown items type for array', (t) => {
+  return shouldMatchFiles('unknown', t)
+});

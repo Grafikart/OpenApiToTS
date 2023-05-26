@@ -1,6 +1,6 @@
 {
   "name": "@grafikart/o2ts",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "",
   "type": "module",
   "main": "dist/generator.js",

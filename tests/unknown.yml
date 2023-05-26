@@ -1,0 +1,26 @@
+openapi: 3.0.3
+info:
+  title: Unknown test
+paths:
+  /pet:
+    get:
+      summary: Upload a file
+      description: Upload a file
+      requestBody:
+        description: Create a new File
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - names
+              properties:
+                names:
+                  type: array
+                  description: names of the pets
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+        '405':
+          description: Invalid input

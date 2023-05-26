@@ -207,7 +207,7 @@ export type APIResponse<
       }
 
       if ('type' in item && Array.isArray(item.type)) {
-        throw new Error(`Can't convert item to NodeType`)
+        throw new Error(`Can't convert item to NodeType : ${JSON.stringify(item.type)}`)
       }
 
       const infos = {
@@ -281,7 +281,10 @@ export type APIResponse<
         return new SimpleType('string').with(infos)
       }
 
-      if (['array'].includes(item.type) && 'items' in item && item.items) {
+      if (['array'].includes(item.type)) {
+        if (!('items' in item) || !item.items) {
+          return new ArrayType(new SimpleType('unknown')).with(infos);
+        }
         return new ArrayType(this.itemToNode(item.items)).with(infos)
       }
 

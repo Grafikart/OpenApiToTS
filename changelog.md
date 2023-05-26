@@ -1,6 +1,18 @@
+## 0.1.13
+
+- Handle array type without "items"
+
 ## 0.1.12
 
 - Handle non 200 success response
+
+## 0.1.12
+
+- Default type to object if "type" property is missing
+
+## 0.1.10
+
+- Handle multipart/form-data request body
 
 ## 0.1.9
 

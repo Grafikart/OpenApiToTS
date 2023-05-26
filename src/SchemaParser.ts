@@ -17,6 +17,7 @@ type Ref = OpenAPIV3_1.ReferenceObject
 type Operation = OpenAPIV3_1.OperationObject
 type Document = OpenAPIV3_1.Document
 type Responses = OpenAPIV3_1.ResponsesObject
+type Response = OpenAPIV3_1.ResponseObject
 type Schema = IJsonSchema | OpenAPIV3_1.BaseSchemaObject | IJsonSchema[] | OpenAPIV3.BaseSchemaObject
 type RequestBody = OpenAPIV3_1.RequestBodyObject
 
@@ -121,7 +122,7 @@ export type APIResponse<
   }
 
   private responseToType (responses: Responses): NodeType {
-    let response = responses?.['200']
+    let response = this.successResponse(responses)
     if (!response) {
       return new SimpleType('null')
     }
@@ -137,6 +138,22 @@ export type APIResponse<
     }
     return this.itemToNode(jsonBody)
   }
+
+  /**
+   * Find a 2XX response among responses
+   */
+  private successResponse (responses?: Responses): Ref | Response | undefined {
+    if (!responses) {
+      return undefined;
+    }
+    for (const [status, response] of Object.entries(responses)) {
+      if (status.startsWith('2')) {
+        return response
+      }
+    }
+    return undefined;
+  }
+
 
   /**
    * Extract parameters

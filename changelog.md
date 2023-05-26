@@ -1,3 +1,7 @@
+## 0.1.12
+
+- Handle non 200 success response
+
 ## 0.1.9
 
 - Add shebang for the generator

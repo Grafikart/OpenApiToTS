@@ -165,7 +165,15 @@ export type APIEndpoints = {
       }
     }
   }
-  "/store/inventory": { responses: { get: {} }; requests: { method?: "get" } }
+  "/store/inventory": {
+    responses: {
+      get: {
+        /* Format: int32 */
+        [key: string]: number
+      }
+    }
+    requests: { method?: "get" }
+  }
   "/store/order": {
     responses: { post: APISchemas["Order"] }
     requests: { method: "post"; body: APISchemas["Order"] }

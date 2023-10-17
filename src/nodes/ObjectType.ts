@@ -6,7 +6,11 @@ export class ObjectType extends NodeType {
   properties = [] as [string, NodeType, boolean][]
 
   addProperty(name: string, type: NodeType, optional: boolean = false) {
-    this.properties.push([name, type, optional])
+    this.properties.push([`"${name}"`, type, optional])
+  }
+
+  addAdditionalProperties(type: NodeType) {
+    this.properties.push(['[key: string]', type, false])
   }
 
   toString (): string {
@@ -14,7 +18,9 @@ export class ObjectType extends NodeType {
       return '{}'
     }
     return `{` +
-      this.properties.map(([name, type, optional]) => `${type.toComment()}"${name}"${optional ? '?:' : ':'}${type.toString()}`) +
+      this.properties
+          .map(([name, type, optional]) => `${type.toComment()}${name}${optional ? '?:' : ':'}${type.toString()}`)
+          .join(';') +
     `}`
   }
 

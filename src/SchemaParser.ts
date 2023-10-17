@@ -257,19 +257,30 @@ export type APIResponse<
       if (!('type' in item) || typeof item.type !== 'string') {
           throw new Error(`Can't convert item to NodeType : ${JSON.stringify(item)}`)
       }
-
       if (['object'].includes(item.type)) {
         const type = new ObjectType().with(infos)
-        if (!('properties' in item)) {
-          return type
+        if (
+            ('properties' in item) ||
+            ('items' in item)
+        ) {
+          let properties = ('properties' in item) ? item.properties! : item.items!
+          for (const [propertyName, propertyItem] of Object.entries(properties)) {
+            type.addProperty(
+                propertyName,
+                this.itemToNode(propertyItem),
+                !(item.required ?? []).includes(propertyName)
+            )
+          }
         }
-        let properties = ('properties' in item) ? item.properties! : item.items!
-        for (const [propertyName, propertyItem] of Object.entries(properties)) {
-          type.addProperty(
-            propertyName,
-            this.itemToNode(propertyItem),
-            !(item.required ?? []).includes(propertyName)
-          )
+        // We have additional properties (unnamed properties)
+        if ('additionalProperties' in item && item.additionalProperties) {
+          if (typeof item.additionalProperties === 'boolean') {
+            type.addAdditionalProperties(new SimpleType('unknown'))
+          } else {
+            type.addAdditionalProperties(
+                this.itemToNode(item.additionalProperties)
+            )
+          }
         }
         return type
       }

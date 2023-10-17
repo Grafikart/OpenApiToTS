@@ -1,3 +1,7 @@
+## 0.1.14
+
+- Handle "additionalProperties" on object type
+
 ## 0.1.13
 
 - Handle array type without "items"

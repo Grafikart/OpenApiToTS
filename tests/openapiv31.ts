@@ -4,20 +4,17 @@ export type APISchemas = {
      * Format: int64
      * @example 10
      */
-    id?: number
-    /*
+    id?: number /*
      * Format: int64
      * @example 198772
      */
-    petId?: number
-    /*
+    petId?: number /*
      * Format: int32
      * @example 7
      */
     quantity?: number
     /* Format: date-time */
-    shipDate?: string
-    /*
+    shipDate?: string /*
      * Order Status
      * @example approved
      */
@@ -70,8 +67,7 @@ export type APISchemas = {
     /* @example 12345 */
     password?: string
     /* @example 12345 */
-    phone?: string
-    /*
+    phone?: string /*
      * User Status
      * Format: int32
      * @example 1
@@ -242,9 +238,7 @@ export type APIRequest<T extends APIPaths, M extends APIMethods<T>> = Omit<
 
 type DefaultToGet<T extends string | undefined> = T extends string ? T : "get"
 
-export type APIResponse<
-  T extends APIPaths,
-  M extends string | undefined
-> = DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
-  ? APIEndpoints[T]["responses"][DefaultToGet<M>]
-  : never
+export type APIResponse<T extends APIPaths, M extends string | undefined> =
+  DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
+    ? APIEndpoints[T]["responses"][DefaultToGet<M>]
+    : never

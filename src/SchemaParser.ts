@@ -170,6 +170,8 @@ export type APIResponse<
         subType.addProperty(param['name'], this.itemToNode(param.schema), param['required'] !== true)
       } else if ('content' in param && param.content) {
         subType.addProperty(param['name'], this.itemToNode(param.content), param['required'] !== true)
+      } else if ('type' in param && param.type && typeof param.type === 'string') {
+        subType.addProperty(param['name'], this.itemToNode({type: param.type} satisfies Schema), param['required'] !== true)
       } else {
         throw new Error(`Can't handle param ${JSON.stringify(param)}`)
       }
@@ -225,11 +227,11 @@ export type APIResponse<
       }
 
       if ('application/json' in item) {
-        return this.itemToNode(item['application/json']['schema']).with(infos)
+        return this.itemToNode((item['application/json'] as {schema: Schema})['schema']).with(infos)
       }
 
       if ('in' in item && 'schema' in item) {
-        return this.itemToNode(item['schema']).with(infos)
+        return this.itemToNode(item['schema'] as Schema).with(infos)
       }
 
       if ('$ref' in item && item.$ref) {

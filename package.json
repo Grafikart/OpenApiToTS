@@ -15,35 +15,21 @@
     "dist"
   ],
   "scripts": {
+    "test": "bun test",
     "build": "tsc --noEmit false",
-    "dev": "tsc-watch --onSuccess \"node ./dist/generator.js ./demo/openapi.yml ./demo/openapi.ts\"",
-    "test": "ava ./tests/generator.test.ts"
-  },
-  "ava": {
-    "extensions": {
-      "ts": "module"
-    },
-    "nodeArguments": [
-      "--loader=ts-node/esm"
-    ]
+    "dev": "tsc-watch --onSuccess \"node ./dist/generator.js ./demo/openapi.yml ./demo/openapi.ts\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@readme/openapi-parser": "^2.3.0",
-    "prettier": "^2.7.1"
+    "@readme/openapi-parser": "^2.5.0",
+    "prettier": "^3.2.5"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
-    "@types/prettier": "^2.7.1",
-    "ava": "^5.1.0",
-    "openapi-types": "^12.0.2",
-    "ts-node": "^10.9.1",
-    "tsc-watch": "^6.0.0",
-    "typescript": "^4.6.4"
-  },
-  "volta": {
-    "node": "19.0.1"
+    "@types/bun": "^1.0.12",
+    "@types/node": "^20.12.3",
+    "openapi-types": "^12.1.3",
+    "typescript": "^5.4.3"
   }
 }

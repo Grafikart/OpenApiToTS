@@ -4,8 +4,7 @@ export type APISchemas = {
      * The uuid of the document
      * @example 123e4567-e89b-12d3-a456-426655440000
      */
-    uuid?: string
-    /*
+    uuid?: string /*
      * The type of risk object of the document is attached to
      * @example ContractRequest
      */
@@ -14,13 +13,11 @@ export type APISchemas = {
       | "Car"
       | "Motorbike"
       | "ContractRequest"
-      | "Contract"
-    /*
+      | "Contract" /*
      * The id of the risk object of the document is attached to
      * @example 25421
      */
-    objectId?: number
-    /*
+    objectId?: number /*
      * The type of the document (DriverLicense, IdentityCard, AccidentRecord, PlateRegistrationCertificate, OdometerPicture, PurchaseInvoice, CurrentContract)
      * @example DriverLicense
      */
@@ -31,23 +28,19 @@ export type APISchemas = {
       | "PlateRegistrationCertificate"
       | "OdometerPicture"
       | "PurchaseInvoice"
-      | "CurrentContract"
-    /*
+      | "CurrentContract" /*
      * The name of the file
      * @example driver-license.jpg
      */
-    fileName?: string
-    /*
+    fileName?: string /*
      * The mime type of the file
      * @example image/jpeg
      */
-    mimeType?: string
-    /*
+    mimeType?: string /*
      * The date the document was created
      * @example 2020-01-01T00:00:00.000Z
      */
-    createdAt?: string
-    /*
+    createdAt?: string /*
      * The date the document was last updated
      * @example 2020-01-01T00:00:00.000Z
      */
@@ -111,9 +104,7 @@ export type APIRequest<T extends APIPaths, M extends APIMethods<T>> = Omit<
 
 type DefaultToGet<T extends string | undefined> = T extends string ? T : "get"
 
-export type APIResponse<
-  T extends APIPaths,
-  M extends string | undefined
-> = DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
-  ? APIEndpoints[T]["responses"][DefaultToGet<M>]
-  : never
+export type APIResponse<T extends APIPaths, M extends string | undefined> =
+  DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
+    ? APIEndpoints[T]["responses"][DefaultToGet<M>]
+    : never

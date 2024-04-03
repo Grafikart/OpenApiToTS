@@ -28,9 +28,7 @@ export type APIRequest<T extends APIPaths, M extends APIMethods<T>> = Omit<
 
 type DefaultToGet<T extends string | undefined> = T extends string ? T : "get"
 
-export type APIResponse<
-  T extends APIPaths,
-  M extends string | undefined
-> = DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
-  ? APIEndpoints[T]["responses"][DefaultToGet<M>]
-  : never
+export type APIResponse<T extends APIPaths, M extends string | undefined> =
+  DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
+    ? APIEndpoints[T]["responses"][DefaultToGet<M>]
+    : never

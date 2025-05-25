@@ -9,14 +9,19 @@ import {format} from 'prettier'
 
 const testDir = dirname(fileURLToPath(import.meta.url))
 
+// Fonction pour normaliser les sauts de ligne (convertir CRLF et LF en LF)
+const normalizeLine = (text: string) => text.replace(/\r\n/g, "\n");
+
 const shouldMatchFiles = async (file: string) => {
     const apiSchema = await OpenAPI.parse(join(testDir, `${file}.yml`)) as OpenAPIV3_1.Document;
+    // Utiliser la nouvelle signature de SchemaParser en passant null pour les options
     const options = new SchemaParser(apiSchema)
     const code = options.convertToCode()
     const got = await format(code, {semi: false, parser: "typescript"})
     const fixturePath = join(testDir, `${file}.ts`)
     const want = await Bun.file(fixturePath).text()
-    expect(got).toBe(want)
+    // Normaliser les sauts de ligne avant de comparer
+    expect(normalizeLine(got)).toBe(normalizeLine(want))
 }
 
 test('it should work with OpenAPIV3.1', () => {

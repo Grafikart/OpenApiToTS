@@ -6,12 +6,11 @@ import { format } from 'prettier'
 import { writeFileSync } from 'node:fs'
 import { SchemaParser } from './SchemaParser.js'
 import { getConfig } from './config.js'
-import path from 'node:path'
 
 try {
   const args = process.argv.slice(2)
   const yamlFile = args[0] ?? './openapi.yml'
-  const tsFile = args[1] ? args[1] : args[0].replace('.yml', '.ts').replace('.yaml', '.ts')
+  const tsFile = args[1] ? args[1] : yamlFile.replace(/\.ya?ml$/, '.ts')
 
   // Récupérer la configuration
   const projectRoot = process.cwd()
@@ -27,7 +26,7 @@ try {
     semi: config.format?.semi ?? false,
     tabWidth: config.format?.tabWidth ?? 2,
     singleQuote: config.format?.singleQuote ?? true,
-    trailingComma: config.format?.trailingComma ? "all" : "none"
+    trailingComma: (config.format?.trailingComma === true ? "all" : "none") as "all" | "none" | "es5"
   }
 
   writeFileSync(tsFile, await format(code, formatOptions))

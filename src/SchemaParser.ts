@@ -7,7 +7,6 @@ import { ArrayType } from './nodes/ArrayType.js'
 import { UnionType } from './nodes/UnionType.js'
 import { IntersectionType } from './nodes/IntersectionType.js'
 import { StringLiteralType } from './nodes/StringLiteralType.js'
-import { O2TSConfig } from './config.js'
 
 function capitalize (s: string): string {
   return s[0].toUpperCase() + s.slice(1)
@@ -46,6 +45,7 @@ export interface SchemaParserOptions {
 }
 
 export class SchemaParser {
+  // Options par défaut qui seront utilisées si aucune n'est fournie
   private options: SchemaParserOptions = {
     typePrefix: 'API',
     includeExamples: false,
@@ -54,6 +54,7 @@ export class SchemaParser {
   }
 
   constructor (private document: Document, options?: SchemaParserOptions) {
+    // Si des options sont fournies, les fusionner avec les options par défaut
     if (options) {
       this.options = { ...this.options, ...options }
     }

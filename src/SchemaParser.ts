@@ -7,6 +7,7 @@ import { ArrayType } from './nodes/ArrayType.js'
 import { UnionType } from './nodes/UnionType.js'
 import { IntersectionType } from './nodes/IntersectionType.js'
 import { StringLiteralType } from './nodes/StringLiteralType.js'
+import { O2TSConfig } from './config.js'
 
 function capitalize (s: string): string {
   return s[0].toUpperCase() + s.slice(1)
@@ -21,9 +22,41 @@ type Response = OpenAPIV3_1.ResponseObject
 type Schema = IJsonSchema | OpenAPIV3_1.BaseSchemaObject | IJsonSchema[] | OpenAPIV3.BaseSchemaObject
 type RequestBody = OpenAPIV3_1.RequestBodyObject
 
-export class SchemaParser {
+export interface SchemaParserOptions {
+  /**
+   * Préfixe pour les types générés
+   * @default "API"
+   */
+  typePrefix?: string
+  /**
+   * Inclure les exemples de requête dans les commentaires
+   * @default false
+   */
+  includeExamples?: boolean
+  /**
+   * Générer des types pour les corps de requête
+   * @default true
+   */
+  includeRequestBodies?: boolean
+  /**
+   * Générer des types pour les réponses
+   * @default true
+   */
+  includeResponses?: boolean
+}
 
-  constructor (private document: Document) {
+export class SchemaParser {
+  private options: SchemaParserOptions = {
+    typePrefix: 'API',
+    includeExamples: false,
+    includeRequestBodies: true,
+    includeResponses: true
+  }
+
+  constructor (private document: Document, options?: SchemaParserOptions) {
+    if (options) {
+      this.options = { ...this.options, ...options }
+    }
   }
 
   convertToCode (): string {
@@ -35,7 +68,7 @@ export class SchemaParser {
       if (group === 'securitySchemes') {
         continue
       }
-      const typeName = 'API' + capitalize(group)
+      const typeName = this.options.typePrefix + capitalize(group)
       const components = new ObjectType()
       for (const [schemaName, componentSchema] of Object.entries(schemas)) {
         components.addProperty(schemaName, this.itemToNode(componentSchema?.['content']?.['application/json']?.['schema'] ?? componentSchema))
@@ -60,13 +93,13 @@ export class SchemaParser {
       apiEndpoint.addProperty('requests', requests)
       apiEndpoints.addProperty(endpoint, apiEndpoint)
     }
-    types.push(['APIEndpoints', apiEndpoints])
+    types.push([this.options.typePrefix + 'Endpoints', apiEndpoints])
 
     return types.map(([name, type]) => `export type ${name} = ${type.toString()}`).join('\n\n') + `
   
-export type APIPaths = keyof APIEndpoints
+export type APIPaths = keyof ${this.options.typePrefix}Endpoints
 
-export type APIRequests<T extends APIPaths> = APIEndpoints[T]["requests"]
+export type APIRequests<T extends APIPaths> = ${this.options.typePrefix}Endpoints[T]["requests"]
 
 export type APIMethods<T extends APIPaths> = NonNullable<APIRequests<T>["method"]>
 
@@ -84,8 +117,8 @@ type DefaultToGet<T extends string | undefined> = T extends string
 export type APIResponse<
   T extends APIPaths,
   M extends string | undefined
-> = DefaultToGet<M> extends keyof APIEndpoints[T]["responses"]
-  ? APIEndpoints[T]["responses"][DefaultToGet<M>]
+> = DefaultToGet<M> extends keyof ${this.options.typePrefix}Endpoints[T]["responses"]
+  ? ${this.options.typePrefix}Endpoints[T]["responses"][DefaultToGet<M>]
   : never`
   }
 
@@ -236,7 +269,7 @@ export type APIResponse<
 
       if ('$ref' in item && item.$ref) {
         const [_, __, group, name] = item.$ref.split('/')
-        return new SimpleType(`API${capitalize(group)}['${name}']`).with(infos)
+        return new SimpleType(`${this.options.typePrefix}${capitalize(group)}['${name}']`).with(infos)
       }
 
       if ('anyOf' in item && item.anyOf) {

@@ -1,0 +1,28 @@
+openapi: "3.1.1"
+info:
+  version: "1.0"
+  title: "Multiple type test"
+paths:
+  /pet:
+    get:
+      summary: Upload a file
+      description: Upload a file
+      requestBody:
+        description: Create a new File
+        content:
+          application/json:
+            schema:
+              type:
+                - "object"
+                - "null"
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+        '405':
+          description: Invalid input
